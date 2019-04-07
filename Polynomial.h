@@ -99,7 +99,7 @@ public:
 		int currentPolyDegree = this->Degree();
 		Polynomial<T> result(currentPolyDegree - 1);
 		for (int i = currentPolyDegree; i > 0; i--) {
-			result[i - 1] = this->coefficients[i] * i;
+			result[i - 1] = this->coefficients[i] * (T)i;
 		}
 		return result;
 	}
@@ -162,7 +162,15 @@ public:
 		}
 	}
 
-	void FindComplexRoot()
+	/*
+	** Метод Ньютона
+	*/
+	T Neuton(complex<double> someRoot) {
+		auto derivativePolinomial = this->Derivative();
+		return someRoot - (*this)(someRoot) / derivativePolinomial(someRoot);
+	}
+
+	complex <double> FindComplexRoot()
 	{
 		// Нормализуем многочлен
 		// Делим все коэффициенты на коэфф. при старшей степени
@@ -177,14 +185,64 @@ public:
 		QSMatrix <complex<double>> polyMatrix = this->GeneratePolynomialComplexMatrix(shiftedPoly);
 		QSMatrix <complex<double>> randomVector = this->GenerateRandomComplexVector(polyMatrix.get_cols());
 
-		// Умножение матриц по формуле
-		QSMatrix <complex<double>> result = polyMatrix * randomVector;
+		QSMatrix <complex<double>> squaredMatrix = polyMatrix;
+		complex<double> lambda;
+		complex<double> uN;
+		complex<double> vN;
+		complex<double> prevLambda(0, 0);
 
-		PrintMatrix(polyMatrix);
-		cout << endl;
-		PrintMatrix(randomVector);
-		cout << endl;
-		PrintMatrix(result);
+		int count = 0;
+		double difference = 9999;
+		double eps = 0.001;
+
+		// Уточняем начальное лямбда
+		while (difference > eps)
+		{
+			if (count > 20) {
+				cout << "LAMBDA ERROR" << endl;
+				break;
+			}
+
+			squaredMatrix = squaredMatrix * polyMatrix;
+			QSMatrix <complex<double>> resultMatrix = squaredMatrix * randomVector;
+			
+			uN = resultMatrix(0, 0);
+			vN = resultMatrix(1, 0);
+			lambda = uN / vN;
+
+			if (count == 0)
+			{
+				prevLambda = lambda;
+			}
+			else
+			{
+				difference = abs(lambda - prevLambda);
+				prevLambda = lambda;
+			}
+
+			count++;
+		}
+
+		// Уточняем лямбда с помощью метода ньютона
+		count = 0;
+		difference = 9999;
+		eps = 0.001;
+		complex <double> initRoot = lambda;
+
+		while (difference > eps)
+		{
+			if (count > 20) {
+				cout << "ROOT ERROR" << endl;
+				break;
+			}
+
+			auto nextRoot = this->Neuton(initRoot);
+			difference = abs(initRoot - nextRoot);
+			initRoot = nextRoot;
+			count++;
+		}
+
+		return initRoot;
 	}
 
 	/*
@@ -195,7 +253,7 @@ public:
 	{
 		random_device rd;
 		mt19937 gen(rd());
-		uniform_real_distribution<> dis(-0.5, 0.5);
+		uniform_real_distribution<> dis(-0.2, 0.2);
 		double real = dis(gen);
 		double imag = dis(gen);
 		return complex <double>(real, imag);

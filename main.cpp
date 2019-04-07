@@ -119,9 +119,11 @@ void mainTest()
 
 int main()
 {
-	Polynomial<complex<double>> poly({1,1,1,1});
-	poly.FindComplexRoot();
-	cout << "Done" << endl;
+	Polynomial<complex<double>> poly({-3, 4, 0, 1});
+	cout << "Polynomial" << endl;
+	cout << poly << endl;
+	complex <double> root = poly.FindComplexRoot();
+	printf("Polynomail root: %.3f \n", root.real());
     cin.get();
 	return 0;
 }
