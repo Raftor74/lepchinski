@@ -119,9 +119,9 @@ void mainTest()
 
 int main()
 {
-
-	Polynomial<int> poly({1,0,1});
-	poly.FindRoot();
-	
+	Polynomial<complex<double>> poly({1,1,1,1});
+	poly.FindComplexRoot();
+	cout << "Done" << endl;
+    cin.get();
 	return 0;
 }
