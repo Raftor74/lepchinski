@@ -193,13 +193,13 @@ public:
 
 		int count = 0;
 		double difference = 9999;
-		double eps = 0.001;
+		double eps = 1e-6;
 
 		// Уточняем начальное лямбда
 		while (difference > eps)
 		{
-			if (count > 20) {
-				cout << "LAMBDA ERROR" << endl;
+			if (count > 40) {
+				//cout << "LAMBDA ERROR" << endl;
 				break;
 			}
 
@@ -226,13 +226,13 @@ public:
 		// Уточняем лямбда с помощью метода ньютона
 		count = 0;
 		difference = 9999;
-		eps = 0.001;
+		eps = 1e-6;
 		complex <double> initRoot = lambda;
 
 		while (difference > eps)
 		{
 			if (count > 20) {
-				cout << "ROOT ERROR" << endl;
+				//cout << "ROOT ERROR" << endl;
 				break;
 			}
 
@@ -243,6 +243,13 @@ public:
 		}
 
 		return initRoot;
+	}
+
+	vector<complex<double>> FindComplexRoots()
+	{
+		vector<complex<double>> roots;
+		
+		return roots;
 	}
 
 	/*
