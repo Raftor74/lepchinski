@@ -119,11 +119,19 @@ void mainTest()
 
 int main()
 {
-	Polynomial<complex<double>> poly({-3, 4, 0, 1});
+	//Polynomial<complex<double>> poly({-3, 4, 0, 1});
+
+	Polynomial<complex<double>> poly({9, -24, 16, -6, 8, 0, 1});
+
 	cout << "Polynomial" << endl;
 	cout << poly << endl;
-	complex <double> root = poly.FindComplexRoot();
-	printf("Polynomail root: %.3f \n", root.real());
+	vector<pair<int, complex<double>>> roots = poly.FindComplexRootsWithDegrees();
+
+	for (int i = 0; i < roots.size(); i++)
+	{
+		printf("Polynomail root: %d. Degree: %d Value: (Real:) %.6f (Imag:) %.6f\n", i + 1, roots[i].first, roots[i].second.real(), roots[i].second.imag());
+	}
+
     cin.get();
 	return 0;
 }

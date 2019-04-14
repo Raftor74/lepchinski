@@ -104,6 +104,11 @@ public:
 		return result;
 	}
 
+	/*
+	* Генерирует матрицу для полинома, состоящую из комплексных чисел
+	* @param Polynomial<complex<double>> - полином с комплексными коэффициентами
+	* @return QSMatrix <complex<double>> - матрица для полинома
+	*/
 	QSMatrix <complex<double>> GeneratePolynomialComplexMatrix(const Polynomial<complex<double>> polynomial)
 	{
 		int matrixSize = polynomial.Coefficients().size() - 1;
@@ -172,6 +177,13 @@ public:
 
 	complex <double> FindComplexRoot()
 	{
+		int polyDegree = this->Degree();
+
+		if (polyDegree == 1)
+		{
+			return -this->coefficients[0] / this->coefficients[1];
+		}
+
 		// Нормализуем многочлен
 		// Делим все коэффициенты на коэфф. при старшей степени
 		T lastCoeff = this->coefficients[this->coefficients.size() - 1];
@@ -193,16 +205,11 @@ public:
 
 		int count = 0;
 		double difference = 9999;
-		double eps = 1e-6;
+		double eps = 1e-3;
 
 		// Уточняем начальное лямбда
 		while (difference > eps)
 		{
-			if (count > 40) {
-				//cout << "LAMBDA ERROR" << endl;
-				break;
-			}
-
 			squaredMatrix = squaredMatrix * polyMatrix;
 			QSMatrix <complex<double>> resultMatrix = squaredMatrix * randomVector;
 			
@@ -226,16 +233,11 @@ public:
 		// Уточняем лямбда с помощью метода ньютона
 		count = 0;
 		difference = 9999;
-		eps = 1e-6;
+		eps = 1e-10;
 		complex <double> initRoot = lambda;
 
 		while (difference > eps)
 		{
-			if (count > 20) {
-				//cout << "ROOT ERROR" << endl;
-				break;
-			}
-
 			auto nextRoot = this->Neuton(initRoot);
 			difference = abs(initRoot - nextRoot);
 			initRoot = nextRoot;
@@ -248,7 +250,43 @@ public:
 	vector<complex<double>> FindComplexRoots()
 	{
 		vector<complex<double>> roots;
-		
+		vector<complex<double>> coefficients = this->coefficients;
+
+		while (coefficients.size() > 1)
+		{
+			Polynomial<complex<double>> tempPoly(coefficients);
+			complex<double> root = tempPoly.FindComplexRoot();
+			roots.push_back(root);
+			Polynomial<complex<double>> divResult = tempPoly.Divide(root);
+			coefficients = divResult.Coefficients();
+		}
+
+		return roots;
+	}
+
+	/*
+	* Возвращает все корни с их степенями
+	*/
+	vector<pair<int, complex<double>>> FindComplexRootsWithDegrees()
+	{
+		vector<pair<int, complex<double>>> roots;
+		double epsilon = 1e-4;
+		Polynomial<complex<double>> tempPoly(this->coefficients);
+
+		while (tempPoly.Degree() >= 1)
+		{
+			int multipleDegree = 1;
+			complex<double> root = tempPoly.FindComplexRoot();
+			tempPoly = tempPoly.Divide(root);
+
+			while (abs(tempPoly(root)) < epsilon && tempPoly.Degree() > 0)
+			{
+				multipleDegree++;
+				tempPoly = tempPoly.Divide(root);
+			}
+			roots.push_back(make_pair(multipleDegree, root));
+		}
+
 		return roots;
 	}
 
