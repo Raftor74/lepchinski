@@ -118,20 +118,60 @@ void mainTest()
 	printf("Result: %s \n", sum.to_string().c_str());
 }
 
-int main()
+/*
+* Печатает матрицу на консоль
+*/
+template <typename T>
+void PrintMatrix(const QSMatrix<T> &matrix)
 {
-	int matrixSize = 4;
-	QSMatrix <complex<double>> matrix(matrixSize, matrixSize, 0);
+	for (int i = 0; i < matrix.get_rows(); i++) {
+		for (int j = 0; j < matrix.get_cols(); j++) {
+			cout << matrix(i, j) << " ";
+		}
+		cout << endl;
+	}
+}
 
-	for (int i = 0; i < matrixSize; i++)
-	{
-		for (int j = 0; j < matrixSize; j++)
+/*
+* Печатает вектор на консоль
+*/
+template <typename T>
+void PrintVector(const vector<T> _vector, bool isVertical = false)
+{
+	for (int i = 0; i < _vector.size(); i++) {
+		cout << _vector[i];
+
+		if (isVertical)
 		{
-			complex <double> value(1, 0);
-			matrix(i, j) = value;
+			cout << endl;
+		}
+		else {
+			cout << " ";
 		}
 	}
+	cout << endl;
+}
 
+
+int main()
+{
+	int matrixSize = 3;
+	QSMatrix <complex<double>> matrix(matrixSize, matrixSize, 0);
+	matrix(0, 0) = complex<double>(1, 0);
+	matrix(0, 1) = complex<double>(2, 0);
+	matrix(0, 2) = complex<double>(3, 0);
+	matrix(1, 0) = complex<double>(4, 0);
+	matrix(1, 1) = complex<double>(5, 0);
+	matrix(1, 2) = complex<double>(6, 0);
+	matrix(2, 0) = complex<double>(7, 0);
+	matrix(2, 1) = complex<double>(8, 0);
+	matrix(2, 2) = complex<double>(9, 0);
+
+	
+	Eigenvalues eigenValuesInstance;
+	Polynomial <complex<double>> eigenPolynomial = eigenValuesInstance.GetEigenPolynomial(matrix);
+	cout << "Result" << endl;
+	cout << eigenPolynomial << endl;
     cin.get();
 	return 0;
 }

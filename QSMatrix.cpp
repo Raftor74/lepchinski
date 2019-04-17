@@ -114,13 +114,13 @@ QSMatrix<T>& QSMatrix<T>::operator-=(const QSMatrix<T>& rhs) {
 // Left multiplication of this matrix and another                                                                                                                              
 template<typename T>
 QSMatrix<T> QSMatrix<T>::operator*(const QSMatrix<T>& rhs) {
-	unsigned rows = rhs.get_rows();
+	unsigned rows = this->rows;
 	unsigned cols = rhs.get_cols();
 	QSMatrix result(rows, cols, 0.0);
 
 	for (unsigned i = 0; i < rows; i++) {
 		for (unsigned j = 0; j < cols; j++) {
-			for (unsigned k = 0; k < rows; k++) {
+			for (unsigned k = 0; k < this->get_cols(); k++) {
 				result(i, j) = result(i, j) + this->mat[i][k] * rhs(k, j);
 			}
 		}
