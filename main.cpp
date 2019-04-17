@@ -7,6 +7,7 @@
 #include "LongPlusPlus.h"
 #include "QSMatrix.h"
 #include "Polynomial.h"
+#include "Eigenvalues.h"
 
 using namespace std;
 
@@ -119,17 +120,16 @@ void mainTest()
 
 int main()
 {
-	//Polynomial<complex<double>> poly({-3, 4, 0, 1});
+	int matrixSize = 4;
+	QSMatrix <complex<double>> matrix(matrixSize, matrixSize, 0);
 
-	Polynomial<complex<double>> poly({9, -24, 16, -6, 8, 0, 1});
-
-	cout << "Polynomial" << endl;
-	cout << poly << endl;
-	vector<pair<int, complex<double>>> roots = poly.FindComplexRootsWithDegrees();
-
-	for (int i = 0; i < roots.size(); i++)
+	for (int i = 0; i < matrixSize; i++)
 	{
-		printf("Polynomail root: %d. Degree: %d Value: (Real:) %.6f (Imag:) %.6f\n", i + 1, roots[i].first, roots[i].second.real(), roots[i].second.imag());
+		for (int j = 0; j < matrixSize; j++)
+		{
+			complex <double> value(1, 0);
+			matrix(i, j) = value;
+		}
 	}
 
     cin.get();
